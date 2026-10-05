@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phạm Quang Minh | Portfolio</title>
+    <!-- Google Fonts: Cormorant Garamond for elegant serif, Montserrat for modern sans-serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #05070d; /* Deep navy / near-black */
+            --bg-surface: #0a0d16;
+            --text-main: #f4f4f5;
+            --text-dim: #9ba1a6;
+            --line-light: rgba(255, 255, 255, 0.06);
+            --line-accent: rgba(255, 255, 255, 0.15);
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Montserrat', sans-serif;
+            --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.7;
+            overflow-x: hidden;
+            font-weight: 300;
+            position: relative;
+        }
+
+        /* --- BACKGROUND VISUAL SYSTEM --- */
+        /* Subtle Grain/Noise Texture */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        /* Architectural Grid & Intersections */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(var(--line-light) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line-light) 1px, transparent 1px);
+            background-size: 100px 100px;
+            background-position: center center;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        
+        .bg-dots {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+            background-size: 100px 100px;
+            background-position: -0.5px -0.5px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-line-vertical {
+            position: fixed;
+            top: 0; bottom: 0; left: 50%; width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--line-accent), transparent);
+            z-index: 0; pointer-events: none; opacity: 0.3;
+        }
+
+        /* Ambient Gradients for Depth */
+        .ambient-glow {
+            position: absolute;
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(16, 25, 45, 0.5) 0%, transparent 70%);
+            z-index: 0; pointer-events: none;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6, .serif {
+            font-family: var(--font-serif);
+            font-weight: 400;
+        }
+
+        .italic { font-style: italic; }
+
+        a {
+            color: var(--text-main);
+            text-decoration: none;
+            transition: opacity 0.4s ease;
+        }
+        a:hover { opacity: 0.7; }
+
+        /* Micro-interaction: Animated Underline */
+        .hover-underline {
+            position: relative;
+            display: inline-block;
+        }
+        .hover-underline::after {
+            content: '';
+            position: absolute;
+            width: 0; height: 1px;
+            bottom: -2px; left: 0;
+            background-color: var(--text-main);
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hover-underline:hover::after { width: 100%; }
+
+        /* Layout & Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+            position: relative;
+            z-index: 2;
+        }
+        .spacer-lg { height: 160px; }
+        .spacer-md { height: 80px; }
+
+        .bg-number {
+            position: absolute;
+            font-family: var(--font-serif);
+            font-size: 28vw;
+            color: rgba(255, 255, 255, 0.015);
+            line-height: 0.8;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; position: relative;
+        }
+        .hero-statue {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -45%);
+            height: 85vh; opacity: 0.25; z-index: 1;
+            mix-blend-mode: screen; pointer-events: none;
+            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        }
+        .hero-content {
+            z-index: 2; position: relative; padding: 40px;
+        }
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            letter-spacing: 0.05em; line-height: 1;
+            text-transform: uppercase; margin: 20px 0;
+        }
+        .hero-subtitle {
+            font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 4px; color: var(--text-dim);
+        }
+        .hero-desc {
+            font-family: var(--font-serif); font-size: 1.5rem;
+            font-style: italic; color: var(--text-dim); margin-top: 20px;
+        }
+
+        /* Section Titles */
+        .section-header {
+            position: relative; margin-bottom: 60px; z-index: 2;
+        }
+        .section-num {
+            font-family: var(--font-sans); font-size: 0.8rem;
+            letter-spacing: 3px; color: var(--text-dim);
+            display: flex; align-items: center; gap: 15px; margin-bottom: 10px;
+        }
+        .section-num::before {
+            content: ''; width: 30px; height: 1px; background: var(--text-dim);
+        }
+        .section-title {
+            font-size: 3rem; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* Layout Types */
+        .split-layout {
+            display: flex; flex-direction: column; gap: 60px; position: relative; z-index: 2;
+        }
+        @media (min-width: 900px) {
+            .split-layout { flex-direction: row; gap: 100px; }
+            .split-left, .split-right { flex: 1; }
+            .split-right { padding-top: 120px; }
+        }
+
+        .text-block { margin-bottom: 50px; }
+        .text-block p {
+            margin-bottom: 20px; color: var(--text-dim);
+            font-size: 1.05rem; text-align: justify;
+        }
+        .text-block h3 {
+            font-size: 1.8rem; margin-bottom: 10px; color: var(--text-main);
+        }
+        
+        .stat-grid {
+            display: grid; grid-template-columns: 1fr; gap: 20px;
+            margin-top: 30px; border-top: 1px solid var(--line-light); padding-top: 30px;
+        }
+        .stat-item {
+            display: flex; flex-direction: column;
+        }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 5px; }
+        .stat-val { font-size: 1rem; color: var(--text-main); }
+
+        /* Projects Vertical Flow */
+        .project-item {
+            display: flex; flex-direction: column; gap: 40px;
+            padding: 80px 0; border-bottom: 1px solid var(--line-light);
+            position: relative; z-index: 2;
+            transition: var(--transition-smooth);
+        }
+        .project-item:last-child { border-bottom: none; }
+        @media (min-width: 900px) {
+            .project-item { flex-direction: row; align-items: center; }
+            .project-item:nth-child(even) { flex-direction: row-reverse; }
+            .proj-media, .proj-content { flex: 1; }
+            .proj-content { padding: 0 50px; }
+        }
+
+        .proj-media {
+            border: 1px solid var(--line-light);
+            overflow: hidden; /* For hover zoom */
+            position: relative;
+        }
+        .proj-media img, .proj-media video {
+            width: 100%; height: auto; display: block;
+            filter: grayscale(15%) contrast(105%);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+        }
+        .project-item:hover .proj-media img, .project-item:hover .proj-media video {
+            transform: scale(1.03);
+            filter: grayscale(0%) contrast(100%);
+        }
+
+        .proj-meta {
+            font-family: var(--font-sans); font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: var(--text-dim); margin-bottom: 15px;
+        }
+        .proj-title { font-size: 2.2rem; margin-bottom: 20px; line-height: 1.2; }
+        .proj-desc { color: var(--text-dim); margin-bottom: 25px; }
+        
+        .proj-list { list-style: none; color: var(--text-dim); }
+        .proj-list li {
+            position: relative; padding-left: 20px; margin-bottom: 10px; font-size: 0.95rem;
+        }
+        .proj-list li::before {
+            content: '—'; position: absolute; left: 0; color: var(--text-main);
+        }
+
+        /* Grid for Skills */
+        .skills-grid {
+            display: grid; grid-template-columns: 1fr; gap: 50px;
+            position: relative; z-index: 2;
+        }
+        @media (min-width: 768px) { .skills-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .skill-item {
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+            border: 1px solid var(--line-light);
+            transition: var(--transition-smooth);
+        }
+        .skill-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--line-accent);
+            background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+        }
+        .skill-item h4 {
+            font-size: 1.6rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        
+        /* Quote Section */
+        .quote-section {
+            position: relative; min-height: 80vh; display: flex;
+            align-items: center; justify-content: center; text-align: center;
+            padding: 100px 5%; overflow: hidden;
+        }
+        .quote-statue {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; max-width: 600px; opacity: 0.1; z-index: 1;
+            pointer-events: none; filter: blur(3px);
+        }
+        .quote-content { z-index: 2; position: relative; max-width: 900px; }
+        .quote-text {
+            font-size: clamp(2rem, 5vw, 4.5rem); line-height: 1.2;
+            font-style: italic; margin-bottom: 20px;
+        }
+        .quote-author {
+            font-family: var(--font-sans); font-size: 0.9rem;
+            letter-spacing: 4px; text-transform: uppercase; color: var(--text-dim);
+        }
+        .quote-divider {
+            width: 1px; height: 80px; background: var(--line-accent); margin: 50px auto;
+        }
+
+        /* Footer / Contact */
+        .footer {
+            padding: 100px 5% 50px; text-align: center; position: relative; z-index: 2;
+        }
+        .footer-avatar {
+            width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+            border: 1px solid var(--line-accent); padding: 5px; margin-bottom: 30px;
+        }
+        .footer-links {
+            display: flex; justify-content: center; gap: 40px; margin-top: 40px;
+            font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* Premium Audio Player */
+        .audio-player {
+            position: fixed; bottom: 40px; right: 40px; z-index: 100;
+            display: flex; align-items: center; gap: 20px;
+            background: rgba(10, 13, 22, 0.75); /* Darker tinted background */
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 14px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.2); /* More prominent border */
+            border-radius: 50px;
+            font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255,255,255,0.05); /* Outer and inner glow */
+            transition: var(--transition-smooth);
+        }
+        .audio-player:hover {
+            border-color: rgba(255, 255, 255, 0.35);
+            background: rgba(15, 20, 30, 0.85);
+        }
+        .audio-btn {
+            background: none; border: none; color: var(--text-dim);
+            cursor: pointer; font-family: inherit; font-size: inherit;
+            letter-spacing: inherit; transition: color 0.3s; position: relative;
+        }
+        .audio-btn:hover, .audio-btn.active { color: var(--text-main); font-weight: 400; }
+        .audio-btn.active::after {
+            content: ''; position: absolute; bottom: -6px; left: 50%;
+            transform: translateX(-50%); width: 4px; height: 4px;
+            background: var(--text-main); border-radius: 50%;
+        }
+        .audio-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.2); }
+
+        /* SCROLL REVEAL ANIMATIONS */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <!-- Background Elements -->
+    <div class="bg-grid"></div>
+    <div class="bg-dots"></div>
+    <div class="bg-line-vertical"></div>
+
+    <!-- Audio Player -->
+    <div class="audio-player">
+        <button class="audio-btn" id="btn-track1" onclick="toggleAudio(1)">Track 1</button>
+        <button class="audio-btn" id="btn-track2" onclick="toggleAudio(2)">Track 2</button>
+        <div class="audio-divider"></div>
+        <button class="audio-btn" id="btn-playpause" onclick="playPause()">Play</button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="ambient-glow" style="top: 20%; left: 20%;"></div>
+        <img src="images/statue1.jpg" alt="Classical Art" class="hero-statue" onerror="this.style.display='none'">
+        
+        <div class="hero-content reveal">
+            <div class="hero-subtitle">International Economics Student · Marketing Learner · Digital Creator</div>
+            <h1 class="hero-title serif">Phạm Quang Minh</h1>
+            <div class="hero-desc">"Learning by doing."</div>
+            
+            <div style="margin-top: 40px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">
+                <a href="#about" class="hover-underline" style="margin: 0 15px;">[About]</a>
+                <a href="#projects" class="hover-underline" style="margin: 0 15px;">[Projects]</a>
+                <a href="#skills" class="hover-underline" style="margin: 0 15px;">[Skills]</a>
+                <a href="#contact" class="hover-underline" style="margin: 0 15px;">[Contact]</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="spacer-lg" id="about"></div>
+
+    <!-- 01 ABOUT -->
+    <div class="container">
+        <div class="bg-number" style="top: -50px; left: -5%;">01</div>
+        <div class="ambient-glow" style="top: 10%; right: -10%;"></div>
+        
+        <div class="split-layout">
+            <div class="split-left reveal">
+                <div class="section-header">
+                    <div class="section-num">01</div>
+                    <h2 class="section-title serif">About</h2>
+                </div>
+                <div class="text-block">
+                    <h3 class="serif">Hi, I'm Minh.</h3>
+                    <p>I'm an International Economics student at Foreign Trade University (FTU) with an interest in marketing, technology, content creation, and personal growth.</p>
+                    <p>I like exploring things outside the classroom — from running marketing experiments and creating short-form content to building websites and using AI tools to turn ideas into real projects.</p>
+                    <p>I'm not a professional developer, and I don't pretend to be one. What I enjoy is learning something new, figuring things out, and actually building something with it.</p>
+                </div>
+            </div>
+
+            <div class="split-right reveal delay-1">
+                <div class="text-block" style="padding-top: 30px;">
+                    <h3 class="serif">At a glance</h3>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Full Name</span>
+                            <span class="stat-val">Pham Quang Minh</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Born</span>
+                            <span class="stat-val">28 October 2006</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">University</span>
+                            <span class="stat-val">Foreign Trade University (FTU)</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Major</span>
+                            <span class="stat-val">International Economics</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">High School</span>
+                            <span class="stat-val">Thai Binh High School for the Gifted — CS</span>
+                        </div>
+                        <div style="display: flex; gap: 40px;">
+                            <div class="stat-item">
+                                <span class="stat-label">GPA</span>
+                                <span class="stat-val">3.35 / 4.00</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">IELTS</span>
+                                <span class="stat-val">7.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- 02 WHAT I'M INTO -->
+    <div class="container reveal">
+        <div class="bg-number" style="top: -20px; right: -5%;">02</div>
+        <div class="section-header" style="text-align: center;">
+            <div class="section-num" style="justify-content: center; margin-bottom: 20px;">02</div>
+            <h2 class="section-title serif">What I'm into</h2>
+        </div>
+
+        <div class="skills-grid" style="margin-top: 60px;">
+            <div class="skill-item reveal">
+                <h4 class="serif">Digital Marketing</h4>
+                <div style="font-size: 0.8rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase;">Ads · User Acquisition · Research · Optimization</div>
+                <p>Exploring how brands reach users, test different approaches, and turn data into better marketing decisions.</p>
+            </div>
+            <div class="skill-item reveal delay-1">
+                <h4 class="serif">Content Creation</h4>
+                <div style="font-size: 0.8rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase;">Short-form Video · Editing · Storytelling</div>
+                <p>Experimenting with hooks, editing styles, captions, formats, and the things that make people stop scrolling.</p>
+            </div>
+            <div class="skill-item reveal">
+                <h4 class="serif">Technology & Web</h4>
+                <div style="font-size: 0.8rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase;">AI Tools · Web Development · Digital Products</div>
+                <p>Learning how technology can turn an idea into something people can actually use — even when I don't know everything about the technical side yet.</p>
+            </div>
+            <div class="skill-item reveal delay-1">
+                <h4 class="serif">Personal Development</h4>
+                <div style="font-size: 0.8rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase;">Discipline · Learning · Consistency · Growth</div>
+                <p>Trying to build better systems, habits, and skills through real experience rather than just consuming information.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer-lg" id="projects"></div>
+
+    <!-- 03 PROJECTS -->
+    <div class="container">
+        <div class="bg-number" style="top: -20px; left: -5%;">03</div>
+        <div class="ambient-glow" style="top: 40%; left: -20%;"></div>
+        
+        <div class="section-header" style="text-align: center;">
+            <div class="section-num" style="justify-content: center; margin-bottom: 20px;">03</div>
+            <h2 class="section-title serif">Projects</h2>
+        </div>
+
+        <!-- Project 1 -->
+        <div class="project-item reveal">
+            <div class="proj-media">
+                <img src="images/app-screenshot.png" alt="2K VPN Project" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style='height: 400px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-style: italic; color: var(--text-dim);'>images/app-screenshot.png</div>'">
+            </div>
+            <div class="proj-content">
+                <div class="proj-meta">01 / 2K VPN</div>
+                <h3 class="proj-title serif">Digital Marketing & User Growth</h3>
+                <p style="font-size: 0.85rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase;">Marketing · Advertising · App Growth · Social Media</p>
+                <p class="proj-desc">I currently work part-time on marketing for 2K VPN, a VPN application. This is where I started getting hands-on experience with real marketing problems — where getting more users isn't necessarily the same as getting better users.</p>
+                <ul class="proj-list" style="margin-bottom: 25px;">
+                    <li>Google Ads & other advertising platforms</li>
+                    <li>App Store / Google Play optimization</li>
+                    <li>User targeting & market research</li>
+                    <li>Social media content & Campaign performance analysis</li>
+                </ul>
+                <p style="font-style: italic; color: var(--text-dim);"><strong style="color: var(--text-main); font-style: normal;">Key takeaway:</strong> More traffic doesn't always mean better results. The quality of users, conversion journey, and actual business value matter just as much as acquisition volume.</p>
+                <div style="margin-top: 25px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;">
+                    <a href="#" class="hover-underline" style="margin-right: 20px;">Google Play →</a>
+                    <a href="#" class="hover-underline">App Store →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-item reveal">
+            <div class="proj-media">
+                <video src="videos/marketing-video.mp4" controls onerror="this.style.display='none'; this.parentNode.innerHTML='<div style='height: 400px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-style: italic; color: var(--text-dim);'>videos/marketing-video.mp4</div>'"></video>
+            </div>
+            <div class="proj-content">
+                <div class="proj-meta">02 / SHORT-FORM CONTENT</div>
+                <h3 class="proj-title serif">Content Creation & Experimentation</h3>
+                <p style="font-size: 0.85rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase;">Video Editing · Instagram · Social Media · Creative Testing</p>
+                <p class="proj-desc">I experiment with short-form videos on Instagram, testing different formats, hooks, captions, editing styles, and posting approaches. One of my videos reached 160,000+ views, which gave me a chance to see firsthand how unpredictable — and interesting — content distribution can be.</p>
+                <ul class="proj-list" style="margin-bottom: 25px;">
+                    <li>01 — Hooks & opening sequences</li>
+                    <li>02 — Editing pace & visual rhythm</li>
+                    <li>03 — Captions & context</li>
+                    <li>04 — Different content formats</li>
+                    <li>05 — Organic reach & engagement</li>
+                </ul>
+                <p style="font-style: italic; color: var(--text-dim);"><strong style="color: var(--text-main); font-style: normal;">What I learned:</strong> There isn't always a single formula for content. Create → Observe → Experiment → Learn → Repeat.</p>
+            </div>
+        </div>
+
+        <!-- Project 3 (Added CaseMatch Image) -->
+        <div class="project-item reveal">
+            <div class="proj-media">
+                <img src="images/casematch-screenshot.png" alt="CaseMatch Project Concept" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style='height: 400px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-style: italic; color: var(--text-dim);'>images/casematch-screenshot.png</div>'">
+            </div>
+            <div class="proj-content">
+                <div class="proj-meta">03 / CASEMATCH</div>
+                <h3 class="proj-title serif">A Student-Focused Product Concept</h3>
+                <p style="font-size: 0.85rem; letter-spacing: 1px; color: var(--text-main); margin-bottom: 15px; text-transform: uppercase;">Web Development · Product Design · Academic Project</p>
+                <p class="proj-desc">CaseMatch is a website concept developed for a programming course. The idea is simple: Finding the right teammates for a case competition shouldn't be harder than the competition itself. Students can create profiles, discover competitions, find teams, and apply for open positions based on their interests and skills.</p>
+                <ul class="proj-list" style="margin-bottom: 25px;">
+                    <li>Identifying a real student problem & product concept</li>
+                    <li>Designing the core user flow & key features</li>
+                    <li>Exploring AI-assisted development</li>
+                    <li>Learning how front-end, accounts, and databases connect</li>
+                </ul>
+                <p style="font-style: italic; color: var(--text-dim);"><strong style="color: var(--text-main); font-style: normal;">The interesting part:</strong> I came from an economics background, not CS. So this project became less about "knowing how to code" and more about learning how to turn an idea into something that works.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- 04 & 06: Education & Beyond Work -->
+    <div class="container">
+        <div class="split-layout">
+            <!-- Left: Education -->
+            <div class="split-left reveal">
+                <div class="section-header">
+                    <div class="section-num">04</div>
+                    <h2 class="section-title serif">Education</h2>
+                </div>
+                
+                <div class="text-block">
+                    <h3 class="serif">Foreign Trade University</h3>
+                    <p style="font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-main);">B.A. International Economics • GPA: 3.35</p>
+                    <p>Studying economics gives me a foundation in analytical thinking, business, and understanding how markets work in a global context.</p>
+                </div>
+
+                <div class="text-block" style="border-top: 1px solid var(--line-light); padding-top: 30px;">
+                    <h3 class="serif">Thai Binh High School for the Gifted</h3>
+                    <p style="font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-main);">Computer Science Track</p>
+                    <p>Interestingly enough, I studied CS in high school but didn't end up becoming a programmer. Still, the experience helped me develop logical thinking, problem-solving, and the habit of figuring things out independently — skills that I now use in completely different areas.</p>
+                </div>
+
+                <div class="text-block" style="border-top: 1px solid var(--line-light); padding-top: 30px;">
+                    <h3 class="serif">IELTS Academic — 7.0</h3>
+                    <p style="font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-main);">Reading 8.5 • Speaking 7.0 • Writing 6.5 • Listening 6.5</p>
+                    <p>English has been one of the tools that helps me access international resources, learn independently, and communicate in academic and professional environments.</p>
+                </div>
+
+                <div class="text-block" style="border-top: 1px solid var(--line-light); padding-top: 30px;">
+                    <h3 class="serif">Marketing in Action</h3>
+                    <p style="font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-main);">Practical Marketing Course</p>
+                    <p>Completed Marketing in Action, led by Hưng Lưu — Lead Marketing at MoMo. The course introduced me to a more practical approach to marketing: Understand the customer → Identify the problem → Build hypotheses → Research → Test → Learn.</p>
+                </div>
+            </div>
+
+            <!-- Right: Beyond Work (Offset) -->
+            <div class="split-right reveal delay-1">
+                <div class="section-header">
+                    <div class="section-num">06</div>
+                    <h2 class="section-title serif">Beyond Work & Study</h2>
+                </div>
+                
+                <div class="text-block">
+                    <h3 class="serif">6 Years of Gym</h3>
+                    <p style="font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-main);">Discipline · Consistency · Long-term Progress</p>
+                    <p>I've been training for around 6 years. For me, gym isn't just about getting stronger or looking better. It's probably the longest example in my life of what happens when you keep doing something for years. No dramatic transformation every day. Just show up → train → recover → repeat.</p>
+                </div>
+
+                <div class="text-block" style="border-top: 1px solid var(--line-light); padding-top: 30px;">
+                    <h3 class="serif">Football</h3>
+                    <p>Football has always been one of my favorite ways to disconnect from work and study. And yes, I'm a Cristiano Ronaldo fan. What I admire isn't just the talent — it's the obsession with improvement, discipline, and staying competitive for a ridiculously long time.</p>
+                </div>
+                
+                <div class="section-header" style="margin-top: 80px;">
+                    <div class="section-num">07</div>
+                    <h2 class="section-title serif">What's Next?</h2>
+                </div>
+                <div class="text-block">
+                    <p>Still figuring it out. I'm currently exploring the intersection of: <br><strong style="color: var(--text-main); font-weight: normal; letter-spacing: 1px;">Economics × Marketing × Technology × Creativity</strong></p>
+                    <p>I don't have a perfectly defined career path yet — and honestly, I'm fine with that. Right now, I'd rather try things, build projects, work with real people, make mistakes, and figure out what I'm actually good at.</p>
+                    <p>I'm looking for opportunities to: Learn. Build. Experiment. Collaborate. Improve. One project at a time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer-lg" id="skills"></div>
+
+    <!-- 05 SKILLS -->
+    <div class="container reveal">
+        <div class="section-header" style="text-align: center;">
+            <div class="section-num" style="justify-content: center; margin-bottom: 20px;">05</div>
+            <h2 class="section-title serif">Skills Matrix</h2>
+        </div>
+
+        <div class="skills-grid" style="margin-top: 60px;">
+            <div class="skill-item">
+                <h4 class="serif">Marketing</h4>
+                <ul class="proj-list">
+                    <li>Digital Marketing</li>
+                    <li>User Acquisition</li>
+                    <li>Advertising Platforms</li>
+                    <li>Market Research & Competitor Analysis</li>
+                    <li>Performance Analysis</li>
+                </ul>
+            </div>
+            <div class="skill-item">
+                <h4 class="serif">Creative</h4>
+                <ul class="proj-list">
+                    <li>Video Editing</li>
+                    <li>Short-form Content</li>
+                    <li>Visual Storytelling</li>
+                    <li>Content Experimentation</li>
+                    <li>Creative Ideation</li>
+                </ul>
+            </div>
+            <div class="skill-item">
+                <h4 class="serif">Technology</h4>
+                <ul class="proj-list">
+                    <li>HTML / CSS</li>
+                    <li>Website Development</li>
+                    <li>AI-assisted Development</li>
+                    <li>Digital Product Prototyping</li>
+                    <li>AI Tools integration</li>
+                </ul>
+            </div>
+            <div class="skill-item">
+                <h4 class="serif">Thinking</h4>
+                <ul class="proj-list">
+                    <li>Self-learning</li>
+                    <li>Problem Solving</li>
+                    <li>Adaptability</li>
+                    <li>Discipline</li>
+                    <li>Experimentation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 09: Quote Section -->
+    <section class="quote-section reveal">
+        <div class="ambient-glow" style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 80vw;"></div>
+        <img src="images/statue2.jpg" alt="Art Background" class="quote-statue" onerror="this.style.display='none'">
+        
+        <div class="quote-content">
+            <div class="section-num" style="justify-content: center; margin-bottom: 40px; color: var(--text-main);">09</div>
+            
+            <h2 class="quote-text serif">"You can't learn to swim by just researching the water."</h2>
+            <div class="quote-author">— Not me</div>
+            
+            <div class="quote-divider"></div>
+            
+            <h2 class="quote-text serif">"If today is the worst day, tomorrow can only be better."</h2>
+            <div class="quote-author">— Still not me</div>
+        </div>
+    </section>
+
+    <!-- 08: LET'S CONNECT -->
+    <footer class="footer" id="contact">
+        <div class="container reveal" style="max-width: 800px;">
+            <img src="images/avatar.jpg" alt="Phạm Quang Minh" class="footer-avatar" onerror="this.style.display='none';">
+            <div class="section-num" style="justify-content: center; margin-bottom: 20px;">08</div>
+            <h2 class="serif" style="font-size: 3rem; margin-bottom: 20px;">Let's Connect</h2>
+            <p style="color: var(--text-dim); margin-bottom: 40px;">
+                Got an interesting idea? Whether it's a project, collaboration, internship opportunity, or just a good conversation — feel free to reach out.
+            </p>
+            
+            <div style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 10px;">
+                <a href="mailto:minhpq06@gmail.com" class="hover-underline">minhpq06@gmail.com</a>
+            </div>
+            <div style="color: var(--text-dim); font-size: 0.9rem; letter-spacing: 2px;">(+84) 816 795 116 • Hanoi, Vietnam</div>
+
+            <div class="footer-links">
+                <a href="#" class="hover-underline">LinkedIn <span style="font-size: 0.6rem; color: var(--text-dim);">(Coming soon)</span></a>
+                <a href="#" class="hover-underline">GitHub <span style="font-size: 0.6rem; color: var(--text-dim);">(Coming soon)</span></a>
+            </div>
+            
+            <div style="margin-top: 100px; font-size: 0.75rem; color: rgba(255,255,255,0.2); letter-spacing: 2px; text-transform: uppercase;">
+                &copy; 2026 Phạm Quang Minh. Crafted with intention.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script xử lý Audio & Scroll Animation -->
+    <script>
+        // --- AUDIO PLAYER ---
+        const audio1 = new Audio('audio/track1.mp3');
+        const audio2 = new Audio('audio/track2.mp3');
+        
+        let currentTrack = 0; 
+        let isPlaying = false;
+        
+        const btnTrack1 = document.getElementById('btn-track1');
+        const btnTrack2 = document.getElementById('btn-track2');
+        const btnPlayPause = document.getElementById('btn-playpause');
+
+        audio1.loop = true;
+        audio2.loop = true;
+
+        function updateUI() {
+            btnTrack1.classList.toggle('active', currentTrack === 1);
+            btnTrack2.classList.toggle('active', currentTrack === 2);
+            btnPlayPause.textContent = isPlaying ? 'Pause' : 'Play';
+            btnPlayPause.classList.toggle('active', isPlaying);
+        }
+
+        function toggleAudio(trackNum) {
+            if (currentTrack !== trackNum) {
+                if (currentTrack === 1) audio1.pause();
+                if (currentTrack === 2) audio2.pause();
+                
+                currentTrack = trackNum;
+                if (currentTrack === 1) { audio1.currentTime = 0; audio1.play(); }
+                if (currentTrack === 2) { audio2.currentTime = 0; audio2.play(); }
+                isPlaying = true;
+            } 
+            updateUI();
+        }
+
+        function playPause() {
+            if (currentTrack === 0) {
+                toggleAudio(1);
+                return;
+            }
+            
+            if (isPlaying) {
+                if (currentTrack === 1) audio1.pause();
+                if (currentTrack === 2) audio2.pause();
+                isPlaying = false;
+            } else {
+                if (currentTrack === 1) audio1.play();
+                if (currentTrack === 2) audio2.play();
+                isPlaying = true;
+            }
+            updateUI();
+        }
+
+        // --- SCROLL REVEAL ANIMATIONS ---
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: Stop observing once revealed
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
